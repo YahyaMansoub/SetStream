@@ -1,12 +1,25 @@
+<div align="center">
+
 # SetStream 🏐
 
-*A production-grade local data engineering pipeline for volleyball analytics*
+### *Production-Grade Volleyball Analytics Pipeline*
+
+[![CI/CD](https://github.com/YahyaMansoub/SetStream/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/YahyaMansoub/SetStream/actions)
+[![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com)
+[![R Version](https://img.shields.io/badge/R-4.3.2+-276DC3.svg)](https://www.r-project.org/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
+![Volleyball Analytics](assets/volleyball-receive.jpg)
+
+*End-to-end data pipeline for international volleyball data from FIVB VIS*
+
+[Quick Start](#quick-start) • [Features](#features) • [Architecture](#architecture) • [API Docs](#api-endpoints) • [Dashboard](#dashboard-tabs)
 
 ---
 
-**Status:** 🚧 In Development
+</div>
 
-SetStream is an end-to-end data pipeline that ingests, processes, and analyzes international volleyball data from FIVB VIS (Volleyball Information System). Built entirely in R with modern data engineering practices.
+**SetStream** ingests, processes, and analyzes international volleyball data from FIVB VIS (Volleyball Information System). Built entirely in R with modern data engineering practices, featuring automated pipelines, Elo ratings, upset detection, and interactive analytics.
 
 ## Project Structure
 
@@ -61,22 +74,24 @@ make api
 make dashboard
 ```
 
-## Architecture
+## 🏗️ Architecture
+
+SetStream follows a layered ELT architecture with clear separation of concerns:
 
 ```
-FIVB VIS API
+📡 FIVB VIS API
     ↓
-[Extract Layer] ← Rate limiting, retries, caching
+🔄 [Extract Layer] ← Rate limiting, retries, caching
     ↓
-[Data Lake] ← Parquet, partitioned
+💾 [Data Lake] ← Parquet, partitioned (Season/Year)
     ↓
-[DuckDB Warehouse] ← Staging tables, upserts
+🗄️  [DuckDB Warehouse] ← Staging tables, upserts
     ↓
-[Quality Checks] ← Schema, uniqueness, referential integrity
+✅ [Quality Checks] ← Schema, uniqueness, referential integrity
     ↓
-[Marts] ← Team form, Elo ratings, upsets, rankings
+📊 [Marts] ← Team form, Elo ratings, upsets, rankings
     ↓
-[API + Dashboard] ← Analytics interface
+🚀 [API + Dashboard] ← Analytics interface
 ```
 
 ## Tech Stack
