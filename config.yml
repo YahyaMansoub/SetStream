@@ -1,0 +1,105 @@
+# SetStream Configuration
+# Default configuration for local development
+# Override with environment-specific configs if needed
+
+default:
+  # Pipeline settings
+  pipeline:
+    rolling_window_days: 365        # Last N days of data to ingest
+    backfill_days: NULL              # Override for backfill runs (NULL = use rolling_window_days)
+    force_refresh: false             # Force re-fetch of all data
+    
+  # API client settings
+  api:
+    rate_limit_delay: 1.0            # Seconds between API calls
+    max_retries: 3                   # Max retry attempts on failure
+    retry_backoff_base: 2            # Exponential backoff base (seconds)
+    timeout_seconds: 30              # Request timeout
+    cache_enabled: true              # Enable local caching
+    
+  # Data quality thresholds
+  quality:
+    fail_on_critical: true           # Stop pipeline on critical violations
+    warn_on_major: true              # Log warnings for major issues
+    min_match_completeness: 0.95     # Minimum % of non-null required fields
+    
+  # Storage settings
+  storage:
+    lake_path: "data/lake"
+    warehouse_path: "data/warehouse/setstream.duckdb"
+    state_path: "data/state/state.json"
+    export_path: "data/warehouse/exports"
+    
+  # Elo calculation parameters
+  elo:
+    base_rating: 1500
+    k_factor: 20
+    home_advantage: 0                # Not applicable for neutral-site tournaments
+    
+  # Web services
+  api_service:
+    host: "0.0.0.0"
+    port: 8000
+    
+  dashboard:
+    port: 3838
+    
+  # Logging
+  logging:
+    level: "INFO"                    # DEBUG, INFO, WARN, ERROR
+    file: "logs/setstream.log"
+    console: true
+    
+  # Field selections (used by extraction layer)
+  # Based on v_fields() output - customize as needed
+  fields:
+    tournament:
+      - "No"
+      - "Name"
+      - "Season"
+      - "StartDate"
+      - "EndDate"
+      - "CountryName"
+      - "Gender"
+      - "TeamType"
+      - "Type"
+      - "Status"
+      - "Confederation"
+      
+    match:
+      - "No"
+      - "NoTournament"
+      - "DateLocal"
+      - "City"
+      - "CountryName"
+      - "TeamNameA"
+      - "TeamNameB"
+      - "MatchPointsA"
+      - "MatchPointsB"
+      - "Result"
+      - "Status"
+      - "Round"
+
+# Testing configuration
+testing:
+  pipeline:
+    rolling_window_days: 30          # Smaller window for tests
+    
+  api:
+    rate_limit_delay: 0.1            # Faster for tests
+    
+  storage:
+    lake_path: "tests/tmp/lake"
+    warehouse_path: "tests/tmp/test.duckdb"
+    state_path: "tests/tmp/state.json"
+
+# Production configuration (example)
+production:
+  pipeline:
+    rolling_window_days: 730         # 2 years for production
+    
+  logging:
+    level: "WARN"
+    
+  api:
+    rate_limit_delay: 2.0            # More conservative
