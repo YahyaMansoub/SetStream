@@ -6,8 +6,7 @@
 
 [![CI/CD](https://github.com/YahyaMansoub/SetStream/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/YahyaMansoub/SetStream/actions)
 [![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com)
-[![R Version](https://img.shields.io/badge/R-4.3.2+-276DC3.svg)](https://www.r-project.org/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 
 ![Volleyball Analytics](assets/volleyball-receive.jpg)
 
