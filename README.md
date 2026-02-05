@@ -28,6 +28,25 @@ setstream/
 
 ## Quick Start
 
+### Option 1: Docker (Recommended)
+
+```bash
+# Build and start all services
+docker-compose up -d
+
+# Run the pipeline
+docker-compose exec pipeline make run
+
+# View logs
+docker-compose logs -f
+
+# Access services:
+# - API: http://localhost:8000
+# - Dashboard: http://localhost:3838
+```
+
+### Option 2: Local Development
+
 ```bash
 # 1. Bootstrap environment (first time only)
 make bootstrap
@@ -71,6 +90,8 @@ FIVB VIS API
 - **Dashboard:** Shiny
 - **Testing:** `testthat`
 - **Logging:** `logger`
+- **Containers:** Docker + Docker Compose
+- **CI/CD:** GitHub Actions
 
 ## Features
 
@@ -125,7 +146,45 @@ Edit `config.yml` for:
 - Rate limiting (1 req/sec default)
 - Local caching (avoid refetches)
 - Incremental loads (minimal requests)
-- Polite retry backoff
+- Poocker Deployment
+
+### Production Deployment
+
+```bash
+# Quick deploy (uses deploy.sh)
+./deploy.sh
+
+# Or manually:
+docker-compose -f docker-compose.yml up -d
+
+# Check service health
+docker-compose ps
+
+# Scale services (if needed)
+docker-compose up -d --scale api=3
+
+# Stop services
+docker-compose down
+```
+
+### CI/CD Pipeline
+
+The project includes a GitHub Actions workflow (`.github/workflows/ci-cd.yml`) that:
+
+✅ Runs tests on multiple R versions  
+✅ Builds Docker images  
+✅ Performs security scans  
+✅ Pushes images to GitHub Container Registry  
+✅ Deploys to production (configurable)
+
+**Required GitHub Secrets:**
+- `GITHUB_TOKEN` (automatically provided)
+
+### Available Docker Images
+
+- `production` - Full pipeline runner
+- `api` - REST API service
+- `dashboard` - Shiny dashboard
 
 ## Development
 
@@ -136,6 +195,12 @@ make test
 # Clean data (reset)
 make clean
 
+# View pipeline graph
+Rscript -e "targets::tar_visnetwork()"
+
+# Docker development
+docker-compose build
+docker-compose run --rm pipeline make test
 # View pipeline graph
 Rscript -e "targets::tar_visnetwork()"
 ```

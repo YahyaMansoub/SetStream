@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  # Pipeline service - runs data ingestion
+  pipeline:
+    build:
+      context: .
+      target: production
+    container_name: setstream-pipeline
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config.yml:/app/config.yml:ro
+    environment:
+      - R_CONFIG_ACTIVE=default
+    networks:
+      - setstream-network
+    restart: unless-stopped
+    # Run pipeline on schedule (can be triggered manually)
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        echo "Pipeline container ready. Run 'docker-compose exec pipeline make run' to execute pipeline"
+        tail -f /dev/null
+
+  # API service
+  api:
+    build:
+      context: .
+      target: api
+    container_name: setstream-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data:ro
+      - ./logs:/app/logs
+      - ./config.yml:/app/config.yml:ro
+    environment:
+      - R_CONFIG_ACTIVE=default
+    depends_on:
+      - pipeline
+    networks:
+      - setstream-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  # Dashboard service
+  dashboard:
+    build:
+      context: .
+      target: dashboard
+    container_name: setstream-dashboard
+    ports:
+      - "3838:3838"
+    volumes:
+      - ./data:/app/data:ro
+      - ./logs:/app/logs
+      - ./config.yml:/app/config.yml:ro
+    environment:
+      - R_CONFIG_ACTIVE=default
+    depends_on:
+      - pipeline
+      - api
+    networks:
+      - setstream-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3838"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+networks:
+  setstream-network:
+    driver: bridge
+
+volumes:
+  setstream-data:
+    driver: local

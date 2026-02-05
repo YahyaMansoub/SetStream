@@ -1,0 +1,50 @@
+# Docker ignore file for SetStream
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation (keep README)
+COMMITS.md
+*.md
+!README.md
+
+# IDE
+.vscode/
+.idea/
+*.Rproj
+.Rproj.user/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# R artifacts
+.Rhistory
+.RData
+.Ruserdata
+
+# Targets cache
+_targets/
+*.rds
+
+# Generated data (will be created at runtime)
+data/lake/**/*.parquet
+data/warehouse/*.duckdb*
+data/state/*.json
+logs/*.log
+
+# Tests
+tests/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+azure-pipelines.yml
+
+# Temp files
+tmp/
+temp/
+*.tmp
+*.bak
