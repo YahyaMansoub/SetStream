@@ -1,0 +1,57 @@
+# R specific
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# renv
+renv/library/
+renv/local/
+renv/cellar/
+renv/lock/
+renv/python/
+renv/sandbox/
+renv/staging/
+
+# targets
+_targets/
+*.rds
+
+# Data
+data/lake/**/*.parquet
+data/warehouse/*.duckdb
+data/warehouse/*.duckdb.wal
+data/state/*.json
+data/state/*.rds
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Temp
+tmp/
+temp/
+*.tmp
+
+# Python (if fallback connector added)
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+ENV/
+
+# Keep folder structure
+!data/lake/.gitkeep
+!data/warehouse/.gitkeep
+!data/state/.gitkeep
+!logs/.gitkeep
